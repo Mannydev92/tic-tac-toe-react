@@ -10,7 +10,7 @@ function App() {
     symbol: "X",
   });
 
-  const winningConditions = [
+  const WINNING_COMBINATIONS = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -20,8 +20,26 @@ function App() {
     [0, 4, 8],
     [2, 4, 6],
   ];
+  const resetStates = () => {
+    setBoard(["", "", "", "", "", "", "", "", ""]);
+    setActualPlayer({
+      name: "Player-1",
+      symbol: "X",
+    });
+  };
+  const checkWinner = (board) => {
+    for (const combination of WINNING_COMBINATIONS) {
+      if (
+        board[combination[0]] === board[combination[1]] &&
+        board[combination[0]] === board[combination[2]] &&
+        board[combination[0]] !== ""
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
 
-  const checkWinner = (board) => {};
   const tooglePlayer = () => {
     setActualPlayer(
       actualPlayer.symbol === "X"
@@ -34,7 +52,15 @@ function App() {
       const newBoard = [...board];
       newBoard[index] = actualPlayer.symbol;
       setBoard(newBoard);
-      tooglePlayer();
+      const isWinner = checkWinner(newBoard);
+      if (isWinner) {
+        setTimeout(() => {
+          alert("There is a winner!");
+          resetStates();
+        }, 500);
+      } else {
+        tooglePlayer();
+      }
     } else alert("Already clicked!");
   };
 
